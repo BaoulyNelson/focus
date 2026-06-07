@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static humanize %}
+{% block titre %}Profil de {{ profil_user.get_full_name|default:profil_user.username }}{% endblock %}
+{% block contenu %}
+<div class="container-xxl px-3 py-5">
+  <div class="row g-4">
+    <div class="col-lg-3">
+      <div class="profile-card text-center">
+        {% if profil_user.userprofile.avatar %}
+          <img src="{{ profil_user.userprofile.avatar.url }}" alt="" class="profile-avatar">
+        {% else %}
+          <div class="profile-avatar profile-avatar-default">
+            {{ profil_user.get_full_name|default:profil_user.username|first|upper }}
+          </div>
+        {% endif %}
+        <h3 class="profile-name mt-3">{{ profil_user.get_full_name|default:profil_user.username }}</h3>
+        <span class="profile-role-badge">{{ profil_user.userprofile.get_role_display }}</span>
+        {% if profil_user.userprofile.bio %}
+        <p class="profile-bio mt-3">{{ profil_user.userprofile.bio }}</p>
+        {% endif %}
+        {% if profil_user.userprofile.site_web %}
+        <a href="{{ profil_user.userprofile.site_web }}" target="_blank" class="profile-link d-block mt-2">
+          <i class="fas fa-globe me-1"></i>Site web
+        </a>
+        {% endif %}
+        {% if profil_user.userprofile.twitter %}
+        <a href="https://twitter.com/{{ profil_user.userprofile.twitter }}" target="_blank" class="profile-link d-block mt-1">
+          <i class="fab fa-twitter me-1"></i>{{ profil_user.userprofile.twitter }}
+        </a>
+        {% endif %}
+        {% if user == profil_user %}
+        <a href="{% url 'accounts:modifier_profil' %}" class="btn btn-outline-primary btn-sm mt-3 w-100">
+          <i class="fas fa-edit me-2"></i>Modifier le profil
+        </a>
+        <button type="button" class="btn btn-outline-danger btn-sm mt-2 w-100"
+                data-bs-toggle="modal" data-bs-target="#modalDeconnexion">
+          <i class="bi bi-box-arrow-right me-2"></i>Déconnexion
+        </button>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="section-header mb-4">
+        <h2 class="section-title">Articles publiés</h2>
+      </div>
+      <div class="row g-3">
+        {% for article in articles %}
+        <div class="col-md-6">
+          <article class="article-card h-100">
+            <a href="{{ article.get_absolute_url }}" class="article-card-img-link">
+              {% if article.image_principale %}<img src="{{ article.image_principale.url }}" alt="{{ article.titre }}" class="article-card-img">
+              {% else %}<div class="article-card-img article-card-img--placeholder"><i class="fas fa-newspaper fa-2x"></i></div>{% endif %}
+              {% if article.categorie %}<span class="article-card-cat" style="background:{{ article.categorie.couleur }}">{{ article.categorie.nom }}</span>{% endif %}
+            </a>
+            <div class="article-card-body">
+              <h5 class="article-card-title"><a href="{{ article.get_absolute_url }}">{{ article.titre }}</a></h5>
+              <p class="article-card-excerpt">{{ article.extrait|truncatewords:15 }}</p>
+              <small class="text-muted">{{ article.published_at|date:"j F Y" }}</small>
+            </div>
+          </article>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-4">
+          <p class="text-muted">Aucun article publié.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
