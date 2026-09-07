@@ -11,8 +11,8 @@ _FILE    = 'form-control'
 
 class FormulaireConnexion(AuthenticationForm):
     username = forms.CharField(
-        label="Nom d'utilisateur",
-        widget=forms.TextInput(attrs={'class': _INPUT, 'placeholder': "Nom d'utilisateur", 'autofocus': True})
+        label="Nom d'utilisateur ou email",
+        widget=forms.TextInput(attrs={'class': _INPUT, 'placeholder': "Nom d'utilisateur ou email", 'autofocus': True})
     )
     password = forms.CharField(
         label='Mot de passe',

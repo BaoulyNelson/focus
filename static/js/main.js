@@ -1,4 +1,4 @@
-/* LeMédia — main.js */
+/* enoschofficiel — main.js */
 document.addEventListener('DOMContentLoaded', function () {
 
   /* ── Auto-dismiss alerts ──────────────────────────────────────────────── */

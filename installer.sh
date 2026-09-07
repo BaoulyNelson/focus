@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-echo "=== Installation LeMédia ==="
+echo "=== Installation enoschofficiel ==="
 python -m venv venv
 source venv/bin/activate
 pip install --upgrade pip -q

@@ -20,6 +20,7 @@ class VueConnexion(LoginView):
         messages.success(self.request,
             f"Bienvenue, {user.get_full_name() or user.username} !")
         return super().form_valid(form)
+    
 
 
 class VueDeconnexion(LogoutView):
@@ -41,7 +42,7 @@ class VueInscription(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user)
+        login(self.request, user, backend='apps.accounts.backends.EmailOuUsernameBackend')
         messages.success(self.request, 'Votre compte a ete cree avec succes. Bienvenue !')
         return redirect(self.success_url)
 

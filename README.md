@@ -1,6 +1,7 @@
-# LeMédia — Site web d'information Django 4.2
+# enoschofficiel — Site web d'information Django 4.2
 
 ## Prérequis
+
 - Python 3.10+
 - MySQL 8+ via XAMPP (ou MariaDB)
 - XAMPP démarré (Apache + MySQL)
@@ -12,7 +13,7 @@
 cd lemedia
 
 # 2. Créer la base de données dans phpMyAdmin ou MySQL CLI
-mysql -u root -e "CREATE DATABASE lemedia_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -e "CREATE DATABASE enoschofficiel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
 # 3. Environnement virtuel
 python -m venv venv
@@ -39,18 +40,20 @@ Accès : http://127.0.0.1:8000
 
 ## Rôles utilisateurs
 
-| Rôle      | Droits                                              |
-|-----------|-----------------------------------------------------|
-| Lecteur   | Lire et commenter                                   |
-| Auteur    | Créer/modifier ses propres articles                 |
-| Éditeur   | Gérer tous les articles, catégories, commentaires   |
-| Superuser | Accès complet + interface Django Admin              |
+| Rôle      | Droits                                            |
+| --------- | ------------------------------------------------- |
+| Lecteur   | Lire et commenter                                 |
+| Auteur    | Créer/modifier ses propres articles               |
+| Éditeur   | Gérer tous les articles, catégories, commentaires |
+| Superuser | Accès complet + interface Django Admin            |
 
 ## Changer le rôle d'un utilisateur
+
 1. Via `/administration/` (superuser uniquement)
 2. Ou via le tableau de bord Django Admin → Comptes → Profil utilisateur
 
 ## URLs principales
+
 - `/` — Accueil
 - `/actualites/` — Liste des articles
 - `/article/<slug>/` — Détail article
@@ -63,6 +66,7 @@ Accès : http://127.0.0.1:8000
 - `/administration/` — Admin Django (superuser)
 
 ## Structure du projet
+
 ```
 lemedia/
 ├── .env                  # Variables sensibles (ne pas versionner)

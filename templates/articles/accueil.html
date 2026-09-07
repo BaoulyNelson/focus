@@ -22,7 +22,7 @@
             <h1 class="hero-title">{{ article_une.titre }}</h1>
             <p class="hero-excerpt">{{ article_une.extrait|truncatewords:25 }}</p>
             <div class="hero-meta">
-              <span><i class="fas fa-user me-1"></i>{{ article_une.auteur.get_full_name|default:article_une.auteur.username }}</span>
+              <span><i class="fas fa-user me-1"></i>{% firstof article_une.auteur.get_full_name article_une.auteur.username "Auteur inconnu" %}</span>
               <span><i class="fas fa-clock me-1"></i>{{ article_une.published_at|naturaltime }}</span>
               <span><i class="fas fa-eye me-1"></i>{{ article_une.nombre_vues }}</span>
             </div>
@@ -82,12 +82,14 @@
                 <p class="article-card-excerpt">{{ article.extrait|truncatewords:18 }}</p>
                 <div class="article-card-footer">
                   <div class="article-card-author">
-                    {% if article.auteur.userprofile.avatar %}
-                      <img src="{{ article.auteur.userprofile.avatar.url }}" alt="" class="author-avatar-xs">
-                    {% else %}
-                      <span class="author-avatar-xs author-initial">{{ article.auteur.get_full_name|default:article.auteur.username|first|upper }}</span>
-                    {% endif %}
-                    <span>{{ article.auteur.get_full_name|default:article.auteur.username }}</span>
+
+                  
+                  {% if article.auteur.userprofile.avatar %}
+                  <img src="{{ article.auteur.userprofile.avatar.url }}" alt="" class="author-avatar-xs">
+                  {% else %}
+                    <span class="author-avatar-xs author-initial">{% firstof article.auteur.get_full_name article.auteur.username "?"|upper %}</span>
+                  {% endif %}
+                  <span>{% firstof article.auteur.get_full_name article.auteur.username "Auteur inconnu" %}</span>
                   </div>
                   <div class="article-card-stats">
                     <span title="Temps de lecture"><i class="fas fa-clock"></i> {{ article.temps_lecture }}</span>
