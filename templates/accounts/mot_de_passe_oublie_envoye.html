@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block titre %}Email envoyé{% endblock %}
+{% block contenu %}
+<div class="auth-page">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-5 col-lg-4">
+        <div class="auth-card text-center">
+          <div class="auth-header">
+            <div class="auth-logo"><i class="fas fa-envelope-open-text"></i></div>
+            <h1 class="auth-title">Email envoyé</h1>
+            <p class="auth-subtitle">
+              Si un compte existe avec cette adresse, un lien de réinitialisation vient de vous être envoyé.
+              Vérifiez aussi vos courriers indésirables.
+            </p>
+          </div>
+          <div class="auth-footer">
+            <p class="mb-0">
+              <a href="{% url 'accounts:connexion' %}" class="auth-link fw-bold">
+                <i class="fas fa-arrow-left me-1"></i>Retour à la connexion
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

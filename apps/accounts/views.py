@@ -86,3 +86,22 @@ class VueModifierProfil(LoginRequiredMixin, UpdateView):
         u.save()
         messages.success(self.request, 'Votre profil a ete mis a jour avec succes.')
         return redirect('accounts:profil', username=u.username)
+    
+    
+from django.contrib.auth.forms import PasswordResetForm
+
+class FormulaireMotDePasseOublie(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'votre@email.com',
+        })
+        
+from django.contrib.auth.forms import SetPasswordForm
+
+class FormulaireNouveauMotDePasse(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['new_password1'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Nouveau mot de passe'})
+        self.fields['new_password2'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Confirmer le mot de passe'})
