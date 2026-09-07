@@ -382,3 +382,25 @@ def erreur_404(request, exception):
 
 def erreur_500(request):
     return render(request, '500.html', status=500)
+
+
+from .models import Article, Categorie, Tag, Configuration
+from .forms import FormulaireArticle, FormulaireCategorieAdmin, FormulaireConfiguration
+
+class VueDashboardConfiguration(GestionnaireRequisMixin, UpdateView):
+    model         = Configuration
+    form_class    = FormulaireConfiguration
+    template_name = 'dashboard/configuration.html'
+    success_url   = reverse_lazy('articles:dashboard_configuration')
+
+    def get_object(self, queryset=None):
+        return Configuration.get()
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Configuration du site mise à jour avec succès.')
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['titre_page'] = 'Configuration du site'
+        return ctx

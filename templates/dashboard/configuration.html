@@ -1,0 +1,101 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block dash_titre %}{{ titre_page }}{% endblock %}
+{% block dash_contenu %}
+<form method="post" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="dash-card mb-4">
+        <div class="dash-card-header"><h5 class="dash-card-title">Informations générales</h5></div>
+        <div class="dash-card-body">
+          <div class="mb-3">
+            <label class="form-label fw-medium">{{ form.site_name.label }}</label>
+            {{ form.site_name }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium">{{ form.site_description.label }}</label>
+            {{ form.site_description }}
+            <div class="form-text">Utilisée pour le référencement et le partage sur les réseaux sociaux.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium">{{ form.site_tagline.label }}</label>
+            {{ form.site_tagline }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium">{{ form.contact_email.label }}</label>
+            {{ form.contact_email }}
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card mb-4">
+        <div class="dash-card-header"><h5 class="dash-card-title">Réseaux sociaux</h5></div>
+        <div class="dash-card-body">
+          <div class="mb-3">
+            <label class="form-label fw-medium">{{ form.facebook_url.label }}</label>
+            {{ form.facebook_url }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium">{{ form.twitter_url.label }}</label>
+            {{ form.twitter_url }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium">{{ form.instagram_url.label }}</label>
+            {{ form.instagram_url }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium">{{ form.youtube_url.label }}</label>
+            {{ form.youtube_url }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="dash-card mb-4">
+        <div class="dash-card-header"><h5 class="dash-card-title">Logo</h5></div>
+        <div class="dash-card-body">
+          {% if form.instance.logo %}
+          <div class="mb-2 text-center">
+            <img src="{{ form.instance.logo.url }}" class="img-fluid rounded" style="max-height:80px" alt="Logo actuel">
+          </div>
+          {% endif %}
+          {{ form.logo }}
+        </div>
+      </div>
+
+      <div class="dash-card mb-4">
+        <div class="dash-card-header"><h5 class="dash-card-title">Favicon</h5></div>
+        <div class="dash-card-body">
+          {% if form.instance.favicon %}
+          <div class="mb-2 text-center">
+            <img src="{{ form.instance.favicon.url }}" class="rounded" style="width:48px;height:48px" alt="Favicon actuel">
+          </div>
+          {% endif %}
+          {{ form.favicon }}
+          <div class="form-text">Idéalement carrée, ex: 512x512px.</div>
+        </div>
+      </div>
+
+      <div class="dash-card mb-4">
+        <div class="dash-card-header"><h5 class="dash-card-title">Image de partage par défaut</h5></div>
+        <div class="dash-card-body">
+          {% if form.instance.image_partage %}
+          <div class="mb-2">
+            <img src="{{ form.instance.image_partage.url }}" class="img-fluid rounded" alt="Image de partage actuelle">
+          </div>
+          {% endif %}
+          {{ form.image_partage }}
+          <div class="form-text">Utilisée quand un article ou une page sans image propre est partagé. Idéal: 1200x630px.</div>
+        </div>
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save me-2"></i>Enregistrer la configuration
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}

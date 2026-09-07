@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 from django.utils.text import slugify
-from .models import Article, Categorie, Tag
+from .models import Article, Categorie, Configuration, Tag
 
 _INPUT  = 'form-control'
 _SELECT = 'form-select'
@@ -81,4 +81,26 @@ class FormulaireCategorieAdmin(forms.ModelForm):
             'nom': 'Nom de la categorie', 'description': 'Description',
             'image': 'Image', 'couleur': "Couleur d'accentuation",
             'ordre': "Ordre d'affichage",
+        }
+        
+        
+        
+class FormulaireConfiguration(forms.ModelForm):
+    class Meta:
+        model  = Configuration
+        fields = ['site_name', 'site_description', 'site_tagline', 'contact_email',
+                  'logo', 'favicon', 'image_partage',
+                  'facebook_url', 'twitter_url', 'instagram_url', 'youtube_url']
+        widgets = {
+            'site_name':        forms.TextInput(attrs={'class': 'form-control'}),
+            'site_description': forms.TextInput(attrs={'class': 'form-control'}),
+            'site_tagline':     forms.TextInput(attrs={'class': 'form-control'}),
+            'contact_email':    forms.EmailInput(attrs={'class': 'form-control'}),
+            'logo':             forms.FileInput(attrs={'class': 'form-control'}),
+            'favicon':          forms.FileInput(attrs={'class': 'form-control'}),
+            'image_partage':    forms.FileInput(attrs={'class': 'form-control'}),
+            'facebook_url':     forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://facebook.com/...'}),
+            'twitter_url':      forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://twitter.com/...'}),
+            'instagram_url':    forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://instagram.com/...'}),
+            'youtube_url':      forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://youtube.com/...'}),
         }

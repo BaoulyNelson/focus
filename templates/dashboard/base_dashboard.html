@@ -56,6 +56,10 @@
       <a href="{% url 'articles:accueil' %}" class="dash-nav-link">
         <i class="fas fa-external-link-alt"></i><span>Voir le site</span>
       </a>
+
+      <a href="{% url 'articles:dashboard_configuration' %}" class="dash-nav-link {% if 'parametres-site' in request.path %}active{% endif %}">
+      <i class="fas fa-sliders-h"></i><span>Configuration du site</span>
+    </a>
     </nav>
   </aside>
 

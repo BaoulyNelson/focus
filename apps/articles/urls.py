@@ -10,6 +10,7 @@ urlpatterns = [
     path('article/<slug:slug>/',    views.VueDetailArticle.as_view(), name='detail'),
     path('categorie/<slug:slug>/',  views.VueCategorieArticles.as_view(), name='categorie'),
     path('tag/<slug:slug>/',        views.VueTagArticles.as_view(),   name='tag'),
+    path('parametres-site/', views.VueDashboardConfiguration.as_view(), name='dashboard_configuration'),
     path('recherche/',              views.VueRecherche.as_view(),     name='recherche'),
     # ── Tableau de bord ────────────────────────────────────────────────────────
     path('tableau-de-bord/',

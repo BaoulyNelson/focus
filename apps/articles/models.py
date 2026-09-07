@@ -121,3 +121,56 @@ class Article(models.Model):
     def temps_lecture(self):
         mots = len(re.sub(r'<[^>]+>', '', self.contenu or '').split())
         return f"{max(1, round(mots / 200))} min"
+    
+    
+    
+    
+from django.conf import settings
+from django.core.cache import cache
+
+class Configuration(models.Model):
+    site_name        = models.CharField(max_length=100, verbose_name='Nom du site')
+    site_description = models.CharField(max_length=255, blank=True, verbose_name='Description')
+    site_tagline     = models.CharField(max_length=255, blank=True, verbose_name='Slogan')
+    contact_email    = models.EmailField(blank=True, verbose_name='Email de contact')
+
+    logo           = models.ImageField(upload_to='site/', blank=True, null=True, verbose_name='Logo')
+    favicon        = models.ImageField(upload_to='site/', blank=True, null=True, verbose_name='Favicon (carré, ex: 512x512)')
+    image_partage  = models.ImageField(upload_to='site/', blank=True, null=True,
+                                        verbose_name='Image de partage par défaut',
+                                        help_text='Utilisée quand un lien du site est partagé sans image propre. Idéal: 1200x630px.')
+
+    facebook_url  = models.URLField(blank=True, verbose_name='Facebook')
+    twitter_url   = models.URLField(blank=True, verbose_name='Twitter / X')
+    instagram_url = models.URLField(blank=True, verbose_name='Instagram')
+    youtube_url   = models.URLField(blank=True, verbose_name='YouTube')
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Configuration du site'
+        verbose_name_plural = 'Configuration du site'
+
+    def __str__(self):
+        return 'Configuration du site'
+
+    def save(self, *args, **kwargs):
+        self.pk = 1  # force le singleton : une seule ligne, toujours id=1
+        super().save(*args, **kwargs)
+        cache.delete('site_config')
+
+    def delete(self, *args, **kwargs):
+        pass  # empêche la suppression accidentelle
+
+    @classmethod
+    def get(cls):
+        config = cache.get('site_config')
+        if not config:
+            config, _ = cls.objects.get_or_create(pk=1, defaults={
+                'site_name':        settings.SITE_NAME,
+                'site_description': settings.SITE_DESCRIPTION,
+                'site_tagline':     settings.SITE_TAGLINE,
+                'contact_email':    settings.CONTACT_EMAIL,
+            })
+            cache.set('site_config', config, None)
+        return config

@@ -8,7 +8,11 @@
   <meta name="description" content="{% block description %}{{ SITE_DESCRIPTION }}{% endblock %}">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+  {% if site_config.favicon %}
+    <link rel="icon" type="image/png" href="{{ site_config.favicon.url }}">
+  {% else %}
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+  {% endif %}
   <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
 
   <!-- SEO -->
@@ -23,7 +27,11 @@
   <meta property="og:description" content="{{ SITE_DESCRIPTION }}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  {% if site_config.image_partage %}
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_config.image_partage.url }}">
+  {% else %}
   <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/og-default.jpg' %}">
+  {% endif %}
   <meta name="twitter:card" content="summary">
   {% endblock %}
 
@@ -88,7 +96,11 @@
 <nav class="navbar navbar-expand-lg main-navbar sticky-top d-none d-lg-flex" id="mainNav">
   <div class="container-xxl px-3">
     <a class="navbar-brand" href="{% url 'articles:accueil' %}">
-      <span class="brand-icon"><i class="fas fa-newspaper"></i></span>
+      {% if site_config.logo %}
+        <img src="{{ site_config.logo.url }}" alt="{{ SITE_NAME }}" class="brand-logo-img" style="height:36px">
+      {% else %}
+        <span class="brand-icon"><i class="fas fa-newspaper"></i></span>
+      {% endif %}
       <span class="brand-name">{{ SITE_NAME }}</span>
     </a>
     <div class="collapse navbar-collapse show" id="navMenu">

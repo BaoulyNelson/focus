@@ -1,9 +1,11 @@
 from django.conf import settings
 from django.core.cache import cache
-from .models import Categorie, Article
+from .models import Categorie, Article, Configuration
 
 
 def site_context(request):
+    config = Configuration.get()
+
     categories = cache.get('nav_categories')
     if not categories:
         categories = list(Categorie.objects.all()[:8])
@@ -18,10 +20,11 @@ def site_context(request):
         cache.set('breaking_news', breaking, 60)
 
     return {
-        'SITE_NAME':        settings.SITE_NAME,
-        'SITE_DESCRIPTION': settings.SITE_DESCRIPTION,
-        'SITE_TAGLINE':     settings.SITE_TAGLINE,
-        'CONTACT_EMAIL':    settings.CONTACT_EMAIL,
+        'SITE_NAME':        config.site_name,
+        'SITE_DESCRIPTION': config.site_description,
+        'SITE_TAGLINE':     config.site_tagline,
+        'CONTACT_EMAIL':    config.contact_email,
+        'site_config':      config,
         'nav_categories':   categories,
         'breaking_news':    breaking,
     }
