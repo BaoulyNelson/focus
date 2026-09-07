@@ -25,6 +25,7 @@ urlpatterns = [
     path('comptes/', include('apps.accounts.urls', namespace='accounts')),
     path('commentaires/', include('apps.comments.urls', namespace='comments')),
     path('contact/', include('apps.contact.urls',  namespace='contact')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
 if settings.DEBUG:

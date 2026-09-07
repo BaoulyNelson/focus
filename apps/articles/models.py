@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.db.models import F
 import re
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Categorie(models.Model):
@@ -66,7 +67,7 @@ class Article(models.Model):
 
     titre            = models.CharField(max_length=255, verbose_name='Titre')
     slug             = models.SlugField(max_length=280, unique=True, blank=True)
-    contenu          = models.TextField(verbose_name='Contenu')
+    contenu = RichTextUploadingField(verbose_name='Contenu')
     extrait          = models.TextField(max_length=400, blank=True, verbose_name='Extrait')
     image_principale = models.ImageField(upload_to='articles/%Y/%m/', blank=True, null=True,
                                          verbose_name='Image principale')

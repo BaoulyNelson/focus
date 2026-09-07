@@ -29,7 +29,6 @@ class FormulaireArticle(forms.ModelForm):
             'categorie': forms.Select(attrs={'class': _SELECT}),
             'extrait':   forms.Textarea(attrs={'class': _INPUT, 'rows': 3,
                                                'placeholder': 'Resume court (genere automatiquement si vide)'}),
-            'contenu':   forms.Textarea(attrs={'class': _INPUT, 'id': 'article-content', 'rows': 20}),
             'image_principale': forms.FileInput(attrs={'class': _INPUT}),
             'status':    forms.Select(attrs={'class': _SELECT}),
             'est_a_la_une': forms.CheckboxInput(attrs={'class': 'form-check-input'}),

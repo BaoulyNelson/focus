@@ -3,3 +3,4 @@ python-decouple==3.8
 Pillow==10.4.0
 django-cleanup==8.1.0
 pymysql==1.0.3
+django-ckeditor==6.7.1

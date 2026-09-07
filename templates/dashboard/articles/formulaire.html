@@ -1,5 +1,10 @@
 {% extends 'dashboard/base_dashboard.html' %}
 {% block dash_titre %}{{ titre_page }}{% endblock %}
+
+{% block extra_css %}
+  {{ form.media.css }}
+{% endblock %}
+
 {% block dash_contenu %}
 <form method="post" enctype="multipart/form-data" novalidate>
   {% csrf_token %}
@@ -86,4 +91,9 @@
     </div>
   </div>
 </form>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  {{ form.media.js }}
 {% endblock %}
