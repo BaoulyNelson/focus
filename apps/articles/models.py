@@ -121,10 +121,23 @@ class Article(models.Model):
     def temps_lecture(self):
         mots = len(re.sub(r'<[^>]+>', '', self.contenu or '').split())
         return f"{max(1, round(mots / 200))} min"
-    
-    
-    
-    
+
+
+class ImageArticle(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='images', verbose_name='Article')
+    image   = models.ImageField(upload_to='articles/galerie/%Y/%m/', verbose_name='Image')
+    legende = models.CharField(max_length=255, blank=True, verbose_name='Legende')
+    ordre   = models.PositiveIntegerField(default=0, verbose_name='Ordre')
+
+    class Meta:
+        ordering = ['ordre', 'id']
+        verbose_name = "Image d'article"
+        verbose_name_plural = "Images d'article"
+
+    def __str__(self):
+        return f"Image de {self.article.titre}"
+
+
 from django.conf import settings
 from django.core.cache import cache
 

@@ -82,6 +82,23 @@
         <div class="article-content">{{ article.contenu|safe }}</div>
       </div>
 
+      <!-- Galerie d'images -->
+      {% if article.images.all %}
+      <div class="article-gallery mt-4">
+        <h5 class="mb-3"><i class="fas fa-images me-2"></i>Galerie</h5>
+        <div class="row g-3">
+          {% for img in article.images.all %}
+          <div class="col-md-4">
+            <a href="{{ img.image.url }}" target="_blank" class="gallery-item d-block">
+              <img src="{{ img.image.url }}" alt="{{ img.legende }}" class="img-fluid rounded">
+              {% if img.legende %}<small class="text-muted d-block mt-1">{{ img.legende }}</small>{% endif %}
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
       <!-- Tags -->
       {% if article.tags.all %}
       <div class="article-tags mt-4">

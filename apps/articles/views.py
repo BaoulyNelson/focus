@@ -6,8 +6,8 @@ from django.urls import reverse_lazy
 from django.core.cache import cache
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
-from .models import Article, Categorie, Tag
-from .forms import FormulaireArticle, FormulaireCategorieAdmin
+from .models import Article, Categorie, Tag, Configuration
+from .forms import FormulaireArticle, FormulaireCategorieAdmin, FormulaireConfiguration, FormulaireImagesArticle
 
 
 # ── Mixins de permission ──────────────────────────────────────────────────────
@@ -100,7 +100,7 @@ class VueDetailArticle(DetailView):
         # Queryset de base sans filtre statut — le filtrage se fait dans get_object
         return Article.objects.select_related(
             'auteur', 'categorie', 'auteur__userprofile'
-        ).prefetch_related('tags')
+        ).prefetch_related('tags', 'images')
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
@@ -261,20 +261,31 @@ class VueDashboardCreerArticle(EditeurRequisMixin, CreateView):
         kw['user'] = self.request.user
         return kw
 
-    def form_valid(self, form):
-        messages.success(self.request, 'Article cree avec succes !')
-        cache.delete('accueil_ctx')
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Erreur lors de la creation. Corrigez les erreurs ci-dessous.')
-        return super().form_invalid(form)
-
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['titre_page']    = 'Creer un article'
         ctx['bouton_submit'] = "Creer l'article"
+        if self.request.POST:
+            ctx['formset_images'] = FormulaireImagesArticle(self.request.POST, self.request.FILES)
+        else:
+            ctx['formset_images'] = FormulaireImagesArticle()
         return ctx
+
+    def form_valid(self, form):
+        ctx = self.get_context_data()
+        formset = ctx['formset_images']
+        if formset.is_valid():
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            messages.success(self.request, 'Article cree avec succes !')
+            cache.delete('accueil_ctx')
+            return redirect(self.success_url)
+        return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Erreur lors de la creation. Corrigez les erreurs ci-dessous.')
+        return super().form_invalid(form)
 
 
 class VueDashboardModifierArticle(EditeurRequisMixin, UpdateView):
@@ -293,20 +304,31 @@ class VueDashboardModifierArticle(EditeurRequisMixin, UpdateView):
         kw['user'] = self.request.user
         return kw
 
-    def form_valid(self, form):
-        messages.success(self.request, 'Article mis a jour avec succes !')
-        cache.delete('accueil_ctx')
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Erreur lors de la modification.')
-        return super().form_invalid(form)
-
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['titre_page']    = f"Modifier : {self.object.titre}"
         ctx['bouton_submit'] = 'Enregistrer les modifications'
+        if self.request.POST:
+            ctx['formset_images'] = FormulaireImagesArticle(self.request.POST, self.request.FILES, instance=self.object)
+        else:
+            ctx['formset_images'] = FormulaireImagesArticle(instance=self.object)
         return ctx
+
+    def form_valid(self, form):
+        ctx = self.get_context_data()
+        formset = ctx['formset_images']
+        if formset.is_valid():
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            messages.success(self.request, 'Article mis a jour avec succes !')
+            cache.delete('accueil_ctx')
+            return redirect(self.success_url)
+        return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Erreur lors de la modification.')
+        return super().form_invalid(form)
 
 
 class VueDashboardSupprimerArticle(EditeurRequisMixin, DeleteView):
@@ -375,18 +397,6 @@ class VueDashboardSupprimerCategorie(GestionnaireRequisMixin, DeleteView):
         return super().form_valid(form)
 
 
-# ── Gestionnaires d'erreurs ───────────────────────────────────────────────────
-
-def erreur_404(request, exception):
-    return render(request, '404.html', status=404)
-
-def erreur_500(request):
-    return render(request, '500.html', status=500)
-
-
-from .models import Article, Categorie, Tag, Configuration
-from .forms import FormulaireArticle, FormulaireCategorieAdmin, FormulaireConfiguration
-
 class VueDashboardConfiguration(GestionnaireRequisMixin, UpdateView):
     model         = Configuration
     form_class    = FormulaireConfiguration
@@ -404,3 +414,12 @@ class VueDashboardConfiguration(GestionnaireRequisMixin, UpdateView):
         ctx = super().get_context_data(**kwargs)
         ctx['titre_page'] = 'Configuration du site'
         return ctx
+
+
+# ── Gestionnaires d'erreurs ───────────────────────────────────────────────────
+
+def erreur_404(request, exception):
+    return render(request, '404.html', status=404)
+
+def erreur_500(request):
+    return render(request, '500.html', status=500)

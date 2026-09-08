@@ -33,6 +33,44 @@
           </div>
         </div>
       </div>
+
+      <div class="dash-card mb-4">
+        <div class="dash-card-header"><h5 class="dash-card-title">Galerie d'images</h5></div>
+        <div class="dash-card-body">
+          {{ formset_images.management_form }}
+          {% if formset_images.non_form_errors %}
+          <div class="alert alert-danger">{{ formset_images.non_form_errors }}</div>
+          {% endif %}
+          {% for f in formset_images %}
+          <div class="row g-2 align-items-end mb-3 pb-3 border-bottom">
+            <div class="col-md-6">
+              {% if f.instance.image %}
+                <img src="{{ f.instance.image.url }}" class="img-fluid rounded mb-2" style="max-height:100px">
+              {% endif %}
+              {{ f.image }}
+              {% if f.image.errors %}<div class="invalid-feedback d-block">{{ f.image.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small mb-1">Legende</label>
+              {{ f.legende }}
+            </div>
+            <div class="col-md-1">
+              <label class="form-label small mb-1">Ordre</label>
+              {{ f.ordre }}
+            </div>
+            <div class="col-md-1">
+              {% if f.instance.pk %}
+                <div class="form-check">
+                  {{ f.DELETE }}
+                  <label class="form-check-label small">Suppr.</label>
+                </div>
+              {% endif %}
+            </div>
+            {{ f.id }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
 
     <!-- Colonne latérale -->

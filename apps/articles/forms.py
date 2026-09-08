@@ -1,7 +1,8 @@
 from django import forms
+from django.forms import inlineformset_factory
 from django.utils import timezone
 from django.utils.text import slugify
-from .models import Article, Categorie, Configuration, Tag
+from .models import Article, Categorie, Configuration, Tag, ImageArticle
 
 _INPUT  = 'form-control'
 _SELECT = 'form-select'
@@ -66,6 +67,19 @@ class FormulaireArticle(forms.ModelForm):
         return article
 
 
+FormulaireImagesArticle = inlineformset_factory(
+    Article, ImageArticle,
+    fields=['image', 'legende', 'ordre'],
+    extra=3,
+    can_delete=True,
+    widgets={
+        'image':   forms.FileInput(attrs={'class': 'form-control'}),
+        'legende': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Legende (optionnel)'}),
+        'ordre':   forms.NumberInput(attrs={'class': 'form-control', 'style': 'width:80px'}),
+    }
+)
+
+
 class FormulaireCategorieAdmin(forms.ModelForm):
     class Meta:
         model  = Categorie
@@ -82,9 +96,9 @@ class FormulaireCategorieAdmin(forms.ModelForm):
             'image': 'Image', 'couleur': "Couleur d'accentuation",
             'ordre': "Ordre d'affichage",
         }
-        
-        
-        
+
+
+
 class FormulaireConfiguration(forms.ModelForm):
     class Meta:
         model  = Configuration

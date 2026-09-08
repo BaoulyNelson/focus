@@ -176,7 +176,12 @@
 <!-- ── Navbar mobile (header simplifié) ─────────────────────────────────── -->
 <header class="mobile-header d-flex d-lg-none sticky-top">
   <a class="mobile-brand" href="{% url 'articles:accueil' %}">
-    <i class="fas fa-newspaper me-1"></i>{{ SITE_NAME }}
+    {% if site_config.logo %}
+      <img src="{{ site_config.logo.url }}" alt="{{ SITE_NAME }}" class="mobile-brand-logo">
+    {% else %}
+      <i class="fas fa-newspaper me-1"></i>
+    {% endif %}
+    {{ SITE_NAME }}
   </a>
   <!-- Bouton recherche mobile -->
   <button class="mobile-search-btn" id="mobileSearchToggle" aria-label="Rechercher">
@@ -225,13 +230,28 @@
     <div class="container-xxl px-3">
       <div class="row g-4">
         <div class="col-lg-4 col-md-6">
-          <div class="footer-brand"><i class="fas fa-newspaper me-2"></i>{{ SITE_NAME }}</div>
+          <div class="footer-brand">
+            {% if site_config.logo %}
+              <img src="{{ site_config.logo.url }}" alt="{{ SITE_NAME }}" class="footer-brand-logo">
+            {% else %}
+              <i class="fas fa-newspaper me-2"></i>
+            {% endif %}
+            {{ SITE_NAME }}
+          </div>
           <p class="footer-desc">{{ SITE_DESCRIPTION }}</p>
           <div class="footer-social">
-            <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+            {% if site_config.facebook_url %}
+            <a href="{{ site_config.facebook_url }}" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+            {% endif %}
+            {% if site_config.twitter_url %}
+            <a href="{{ site_config.twitter_url }}" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-twitter"></i></a>
+            {% endif %}
+            {% if site_config.instagram_url %}
+            <a href="{{ site_config.instagram_url }}" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-instagram"></i></a>
+            {% endif %}
+            {% if site_config.youtube_url %}
+            <a href="{{ site_config.youtube_url }}" target="_blank" rel="noopener" class="social-btn"><i class="fab fa-youtube"></i></a>
+            {% endif %}
           </div>
         </div>
         <div class="col-lg-2 col-md-6 col-6">

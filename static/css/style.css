@@ -1028,3 +1028,18 @@ img { max-width: 100%; height: auto; }
   .mobile-search-bar { display: none !important; }
   body { padding-bottom: 0; }
 }
+
+
+.mobile-brand-logo {
+  height: 28px;
+  width: auto;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.footer-brand-logo {
+  height: 32px;
+  width: auto;
+  margin-right: 8px;
+  vertical-align: middle;
+}
