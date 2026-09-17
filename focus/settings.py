@@ -41,17 +41,20 @@ INSTALLED_APPS = [
     "apps.articles.apps.ArticlesConfig",
     "apps.comments.apps.CommentsConfig",
     "apps.contact.apps.ContactConfig",
-    'ckeditor',
-    'ckeditor_uploader',
+    "ckeditor",
+    "ckeditor_uploader",
 ]
-CKEDITOR_UPLOAD_PATH = 'ckeditor_uploads/'
-CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_UPLOAD_PATH = "ckeditor_uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
 
 CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'height': 400,
-        'width': '100%',
+    "default": {
+        "toolbar": "full",
+        "height": 400,
+        "width": "100%",
+        "toolbarCanCollapse": True,
+        "removePlugins": "elementspath",
+        "contentsCss": ["/static/css/ckeditor-content.css"],
     },
 }
 MIDDLEWARE = [
