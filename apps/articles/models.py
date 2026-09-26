@@ -5,6 +5,44 @@ from django.utils.text import slugify
 from django.db.models import F
 import re
 from ckeditor_uploader.fields import RichTextUploadingField
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
+
+
+def compresser_image(champ_image, largeur_max=1200, qualite=80):
+    """
+    Compresse et convertit en JPEG une image liée à un ImageField,
+    si elle a changé (nouvel upload). Retourne le fichier prêt à assigner
+    au champ, ou None si rien à faire.
+    """
+    if not champ_image or not hasattr(champ_image, 'file'):
+        return None
+
+    try:
+        img = Image.open(champ_image)
+    except Exception:
+        return None
+
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
+
+    if img.width > largeur_max:
+        ratio = largeur_max / img.width
+        nouvelle_hauteur = int(img.height * ratio)
+        img = img.resize((largeur_max, nouvelle_hauteur), Image.LANCZOS)
+
+    buffer = BytesIO()
+    img.save(buffer, format='JPEG', quality=qualite, optimize=True)
+    buffer.seek(0)
+
+    nom_fichier = champ_image.name.rsplit('.', 1)[0] + '.jpg'
+
+    return InMemoryUploadedFile(
+        buffer, 'ImageField', nom_fichier, 'image/jpeg',
+        sys.getsizeof(buffer), None
+    )
 
 
 class Categorie(models.Model):
@@ -27,6 +65,10 @@ class Categorie(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.nom)
+        if self.image and hasattr(self.image, 'file'):
+            nouveau = compresser_image(self.image)
+            if nouveau:
+                self.image = nouveau
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -105,6 +147,10 @@ class Article(models.Model):
         if not self.extrait and self.contenu:
             clean = re.sub(r'<[^>]+>', '', self.contenu)
             self.extrait = clean[:300] + '...' if len(clean) > 300 else clean
+        if self.image_principale and hasattr(self.image_principale, 'file'):
+            nouveau = compresser_image(self.image_principale)
+            if nouveau:
+                self.image_principale = nouveau
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -136,6 +182,13 @@ class ImageArticle(models.Model):
 
     def __str__(self):
         return f"Image de {self.article.titre}"
+
+    def save(self, *args, **kwargs):
+        if self.image and hasattr(self.image, 'file'):
+            nouveau = compresser_image(self.image, largeur_max=1600)
+            if nouveau:
+                self.image = nouveau
+        super().save(*args, **kwargs)
 
 
 from django.conf import settings
@@ -169,6 +222,15 @@ class Configuration(models.Model):
 
     def save(self, *args, **kwargs):
         self.pk = 1  # force le singleton : une seule ligne, toujours id=1
+        if self.logo and hasattr(self.logo, 'file'):
+            nouveau = compresser_image(self.logo)
+            if nouveau:
+                self.logo = nouveau
+        if self.image_partage and hasattr(self.image_partage, 'file'):
+            nouveau = compresser_image(self.image_partage)
+            if nouveau:
+                self.image_partage = nouveau
+        # favicon volontairement exclu : il doit rester tel quel (souvent .ico ou petit PNG carré)
         super().save(*args, **kwargs)
         cache.delete('site_config')
 
